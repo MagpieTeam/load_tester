@@ -56,7 +56,7 @@ defmodule LoadTester.Worker do
         Logger.debug("GOTTOKEN | #{logger_id}")
         token = Poison.decode!(response.body)["token"]
         {ip, token}
-      result when attempts < 5 ->
+      result when attempts < 25 ->
         Logger.debug("NOTOKEN | #{logger_id} | attempts: #{attempts} | #{inspect result}")
         5000 + (10000 * :rand.uniform()) |> trunc() |> :timer.sleep()
         get_token(logger_id, attempts + 1)
