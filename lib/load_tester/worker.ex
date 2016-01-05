@@ -3,12 +3,12 @@ defmodule LoadTester.Worker do
   use Timex
   require Logger
 
-  def start_link(loggers, opts \\ []) do
-    GenServer.start_link(__MODULE__, loggers, opts)
+  def start_link(opts \\ []) do
+    GenServer.start_link(__MODULE__, :ok, opts)
   end
 
-  def init() do
-    loggers = System.get_env("LOGGERS")
+  def init(:ok) do
+    loggers = System.get_env("LOGGERS") |> String.to_integer
     :erlang.send_after(1000, self(), {:execute, loggers})
     
     {:ok, %{}}
