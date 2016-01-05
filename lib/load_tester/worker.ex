@@ -40,6 +40,9 @@ defmodule LoadTester.Worker do
   def get_ip(seed_ip) do
     response = HTTPoison.get!("http://#{seed_ip}/api/nodes", ["Content-Type": "application/json"])
     nodes = Poison.decode!(response.body)
+    :random.seed(:erlang.phash2([node()]),
+            :erlang.monotonic_time(),
+            :erlang.unique_integer())
     node = Enum.random(nodes)
     node["ip"]
   end
