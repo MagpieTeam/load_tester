@@ -30,8 +30,8 @@ defmodule LoadTester.Worker do
     spawn(fn() -> 
       sensors = Magpie.DataAccess.Sensor.get(logger_id)
       logger_id = Poison.encode!(%{logger_id: logger_id})
+      500 + (1000 * :rand.uniform()) |> trunc() |> :timer.sleep()
       case get_token(logger_id, 0) do
-        500 + (1000 * :rand.uniform()) |> trunc() |> :timer.sleep()
         :error -> :error
         {ip, token} -> do_log(ip, logger_id, token, sensors)
       end
