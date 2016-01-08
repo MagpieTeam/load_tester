@@ -31,6 +31,7 @@ defmodule LoadTester.Worker do
       sensors = Magpie.DataAccess.Sensor.get(logger_id)
       logger_id = Poison.encode!(%{logger_id: logger_id})
       case get_token(logger_id, 0) do
+        500 + (1000 * :rand.uniform()) |> trunc() |> :timer.sleep()
         :error -> :error
         {ip, token} -> do_log(ip, logger_id, token, sensors)
       end
@@ -38,13 +39,14 @@ defmodule LoadTester.Worker do
   end
 
   def get_ip(seed_ip) do
-    response = HTTPoison.get!("http://#{seed_ip}/api/nodes", ["Content-Type": "application/json"])
+    response = HTTPoison.get!("http://#{seed_ip}/api/nodes", ["Accept": "application/json"])
     nodes = Poison.decode!(response.body)
     :random.seed(:erlang.phash2([node()]),
             :erlang.monotonic_time(),
             :erlang.unique_integer())
     node = Enum.random(nodes)
-    node["ip"]
+    IO.inspect(node["ip"])
+
   end
 
   def get_token(logger_id, attempts) do
