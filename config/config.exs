@@ -32,5 +32,5 @@ use Mix.Config
 config :logger, :console, format: "$time $message\n"
 
 config :cqerl,
-  cassandra_nodes: {{CQERL}},
-  keyspace: "magpie"
+  cassandra_nodes: [{{192, 168, 33, 10}, 9042}],
+  keypace: "magpie"
